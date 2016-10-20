@@ -1,10 +1,41 @@
 var express = require('express');
+var path = require('path')
 var app = express();
-
-app.get('/', function (req, res) {
-  res.send('Hello World!');
+var moment = require('moment');
+var port = 3000;
+//homepage
+app.get('/', function(req, res) {
+  var fileName = path.join(__dirname, 'index.html');
+  res.sendFile(fileName, function (err) {
+    if (err) {console.error(err)}
+  });
 });
 
-app.listen(3000, function () {
-  console.log('Example app listening on port 3000!');
-});
+//input of the page
+app.get('/:dataString', function(req, res) {
+  var dataString = req.params.dataString;
+  var output;
+  //Using regex, checks if the dataString has only number characters
+  if(/^[0-9]*$/.test(dataString)){
+    output = moment(dataString, "X")
+  } else{
+    output = moment.utc(dataString, "MMMM DD YYYY")
+    console.log(output.utc().format("X"))
+  }
+
+  if (output.isValid()){
+    res.json({
+      unix: output.utc().format("X"),
+      natural: output.utc().format("MMMM D, YYYY")
+    });
+  } else{
+    res.json({
+      unix: 'null',
+      natural: 'null'
+    });
+  }
+})
+
+app.listen(port,function(){
+  console.log("turn on. Port is: ", port)
+})
