@@ -4,11 +4,10 @@ var app = express();
 var moment = require('moment');
 var port = 3000;
 //homepage
+app.use(express.static(path.join(__dirname, 'public')));
+
 app.get('/', function(req, res) {
-  var fileName = path.join(__dirname, 'index.html');
-  res.sendFile(fileName, function (err) {
-    if (err) {console.error(err)}
-  });
+  res.sendFile(path.join(__dirname, 'views/index.html'));
 });
 
 //input of the page
@@ -20,7 +19,6 @@ app.get('/:dataString', function(req, res) {
     output = moment(dataString, "X")
   } else{
     output = moment.utc(dataString, "MMMM DD YYYY")
-    console.log(output.utc().format("X"))
   }
 
   if (output.isValid()){
