@@ -15,7 +15,7 @@ app.get('/:dataString', function(req, res) {
   var dataString = req.params.dataString;
   var output;
   //Using regex, checks if the dataString has only number characters
-  if(/^[0-9]*$/.test(dataString)){
+  if(/^-?[0-9]*$/.test(dataString)){
     output = moment(dataString, "X")
   } else{
     output = moment.utc(dataString, "MMMM DD YYYY")
